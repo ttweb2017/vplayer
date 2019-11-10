@@ -1,15 +1,35 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:karaoke/camera_player_screen.dart';
 import 'package:karaoke/search_tab.dart';
 import 'package:karaoke/singer_list_tab.dart';
 import 'package:karaoke/song_list_tab.dart';
 import 'package:karaoke/video_tab.dart';
 import 'package:provider/provider.dart';
 import 'model/app_state_model.dart';
-import 'styles.dart';
 
-void main() {
+/*void main() {
   return runApp(
+      ChangeNotifierProvider<AppStateModel>(
+        builder: (context) => AppStateModel()..loadSingers(),
+        child: KaraokeApp(),
+      )
+  );
+}*/
+
+List<CameraDescription> cameras;
+
+Future<void> main() async {
+  // Fetch the available cameras before initializing the app.
+  try {
+    WidgetsFlutterBinding.ensureInitialized();
+    cameras = await availableCameras();
+  } on CameraException catch (e) {
+    logError(e.code, e.description);
+  }
+
+  runApp(
       ChangeNotifierProvider<AppStateModel>(
         builder: (context) => AppStateModel()..loadSingers(),
         child: KaraokeApp(),
@@ -27,20 +47,27 @@ class KaraokeApp extends StatelessWidget {
 
     return CupertinoApp(
       title: 'Karaoke',
-      home: KaraokePage(title: 'Karaoke Home Page'),
+      home: KaraokePage(
+          cameras: cameras,
+          title: 'Karaoke Home Page'
+      ),
     );
   }
 }
 
 class KaraokePage extends StatefulWidget {
-  KaraokePage({Key key, this.title}) : super(key: key);
+  KaraokePage({Key key, @required this.cameras, this.title}) : super(key: key);
   final String title;
+  final List<CameraDescription> cameras;
 
   @override
-  _KaraokePageState createState() => _KaraokePageState();
+  _KaraokePageState createState() => _KaraokePageState(cameras);
 }
 
 class _KaraokePageState extends State<KaraokePage> {
+  List<CameraDescription> cameras;
+
+  _KaraokePageState(this.cameras);
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +119,7 @@ class _KaraokePageState extends State<KaraokePage> {
           case 3:
             returnValue = CupertinoTabView(builder: (context){
               return CupertinoPageScaffold(
-                child: VideoTab(),
+                child: VideoTab(cameras: cameras),
               );
             });
             break;
