@@ -23,11 +23,13 @@ class _VideoTabState extends State<VideoTab> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
 
     return CupertinoPageScaffold(
       child: ListView(
         children: <Widget>[
-          CameraScreen(cameras: cameras),
+          //CameraScreen(cameras: cameras),
           /*ChewieListItem(
             videoPlayerController: VideoPlayerController.network(//asset
               _url,
@@ -44,7 +46,16 @@ class _VideoTabState extends State<VideoTab> {
             videoPlayerController: VideoPlayerController.network(
               _url,
             ),
+            autoPlay: true,
+            looping: true,
           ),
+          Container(
+            width: width,
+            height: 300.0,
+            child: CameraScreen(
+              cameras: cameras,
+            ),
+          )
         ],
       ),
     );

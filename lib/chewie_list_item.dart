@@ -6,10 +6,12 @@ class ChewieListItem extends StatefulWidget {
   // This will contain the URL/asset path which we want to play
   final VideoPlayerController videoPlayerController;
   final bool looping;
+  final bool autoPlay;
 
   ChewieListItem({
     @required this.videoPlayerController,
     this.looping,
+    this.autoPlay,
     Key key,
   }) : super(key: key);
 
@@ -29,6 +31,7 @@ class _ChewieListItemState extends State<ChewieListItem> {
       aspectRatio: 16 / 9,
       // Prepare the video to be played and display the first frame
       autoInitialize: true,
+      autoPlay: widget.autoPlay,
       looping: widget.looping,
       // Errors can occur for example when trying to play a video
       // from a non-existent URL

@@ -73,18 +73,18 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
     }
   }
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  //final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-      key: _scaffoldKey,
+    return Container(
+      //key: _scaffoldKey,
       child: Column(
         children: <Widget>[
           Expanded(
             child: Container(
               child: Padding(
-                padding: const EdgeInsets.all(1.0),
+                padding: const EdgeInsets.all(0.5),
                 child: Center(
                   child: _cameraPreviewWidget(),
                 ),
@@ -95,7 +95,7 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
                   color: controller != null && controller.value.isRecordingVideo
                       ? Color(0xFFFF0000)
                       : Color(0xFFC2C2C2),
-                  width: 3.0,
+                  width: 25.0,
                 ),
               ),
             ),
@@ -193,20 +193,16 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
 
   /// Display the control bar with buttons to take pictures and record videos.
   Widget _captureControlRowWidget() {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       mainAxisSize: MainAxisSize.max,
       children: <Widget>[
-        CupertinoButton.filled(
-          child: const Icon(CupertinoIcons.switch_camera_solid),
-          disabledColor: Color(0xFF00BFFF),
-          onPressed: controller != null &&
-              controller.value.isInitialized &&
-              !controller.value.isRecordingVideo
-              ? onTakePictureButtonPressed
-              : null,
-        ),
-        CupertinoButton.filled(
+        Container(
+          width: width / 4,
+          child: CupertinoButton.filled(
             child: const Icon(CupertinoIcons.video_camera),
             disabledColor: Color(0xFF00BFFF),
             onPressed: controller != null &&
@@ -214,29 +210,48 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
                 !controller.value.isRecordingVideo
                 ? onVideoRecordButtonPressed
                 : null,
+          ),
         ),
-        CupertinoButton.filled(
-          child: controller != null && controller.value.isRecordingPaused
-              ? Icon(CupertinoIcons.play_arrow)
-              : Icon(CupertinoIcons.pause),
-          disabledColor: Color(0xFF00BFFF),
-          onPressed: controller != null &&
-              controller.value.isInitialized &&
-              controller.value.isRecordingVideo
-              ? (controller != null && controller.value.isRecordingPaused
-              ? onResumeButtonPressed
-              : onPauseButtonPressed)
-              : null,
+        Container(
+          width: width / 4,
+          child: CupertinoButton.filled(
+            child: controller != null && controller.value.isRecordingPaused
+                ? Icon(CupertinoIcons.play_arrow)
+                : Icon(CupertinoIcons.pause),
+            disabledColor: Color(0xFF00BFFF),
+            onPressed: controller != null &&
+                controller.value.isInitialized &&
+                controller.value.isRecordingVideo
+                ? (controller != null && controller.value.isRecordingPaused
+                ? onResumeButtonPressed
+                : onPauseButtonPressed)
+                : null,
+          ),
         ),
-        CupertinoButton.filled(
-          child: const Icon(CupertinoIcons.settings_solid),
-          disabledColor: Color(0xFFFF0000),
-          onPressed: controller != null &&
-              controller.value.isInitialized &&
-              controller.value.isRecordingVideo
-              ? onStopButtonPressed
-              : null,
-        )
+        Container(
+          width: width / 4,
+          child: CupertinoButton.filled(
+            child: const Icon(CupertinoIcons.settings_solid),
+            disabledColor: Color(0xFFFF0000),
+            onPressed: controller != null &&
+                controller.value.isInitialized &&
+                controller.value.isRecordingVideo
+                ? onStopButtonPressed
+                : null,
+          ),
+        ),
+        Container(
+          width: width / 4,
+          child: CupertinoButton.filled(
+            child: const Icon(CupertinoIcons.switch_camera_solid),
+            disabledColor: Color(0xFF00BFFF),
+            onPressed: controller != null &&
+                controller.value.isInitialized &&
+                !controller.value.isRecordingVideo
+                ? onTakePictureButtonPressed
+                : null,
+          ),
+        ),
       ],
     );
   }
@@ -250,16 +265,19 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
     } else {
       for (CameraDescription cameraDescription in cameras) {
         toggles.add(
-          SizedBox(
+            SizedBox(
             width: 90.0,
-            child: RadioListTile<CameraDescription>(
+            child: CupertinoButton(
+              child: Icon(getCameraLensIcon(cameraDescription.lensDirection)),
+              onPressed: controller != null && controller.value.isRecordingVideo ? null : null,
+            )/*RadioListTile<CameraDescription>(
               title: Icon(getCameraLensIcon(cameraDescription.lensDirection)),
               groupValue: controller?.description,
               value: cameraDescription,
               onChanged: controller != null && controller.value.isRecordingVideo
                   ? null
                   : onNewCameraSelected,
-            ),
+            ),*/
           ),
         );
       }
@@ -271,9 +289,9 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
   String timestamp() => DateTime.now().millisecondsSinceEpoch.toString();
 
   void showInSnackBar(String message) {
-    _scaffoldKey.currentState.showSnackBar(
+    /*_scaffoldKey.currentState.showSnackBar(
       SnackBar(content: Text(message))
-    );
+    );*/
   }
 
   void onNewCameraSelected(CameraDescription cameraDescription) async {
@@ -319,6 +337,7 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
   }
 
   void onVideoRecordButtonPressed() {
+    logError("111", "start recording video");
     startVideoRecording().then((String filePath) {
       if (mounted) setState(() {});
       if (filePath != null) showInSnackBar('Saving video to $filePath');
