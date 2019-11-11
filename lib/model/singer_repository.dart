@@ -1,10 +1,4 @@
-import 'package:flutter/cupertino.dart';
-import 'package:karaoke/Constants.dart';
-
 import 'singer.dart';
-
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 
 class SingersRepository {
   static const _allSingers = <Singer>[];

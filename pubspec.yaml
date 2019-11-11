@@ -38,7 +38,7 @@ dev_dependencies:
   chewie:
   video_player:
 
-  pedantic: ^1.7.0
+  pedantic: ^1.8.0
 
 
 # For information on the generic Dart part of this file, see the

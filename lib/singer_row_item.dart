@@ -52,7 +52,7 @@ class SingerRowItem extends StatelessWidget {
                   ),
                   const Padding(padding: EdgeInsets.only(top: 8)),
                   Text(
-                    '\$${singer.price}',
+                    '${singer.category}',
                     style: Styles.singerRowItemPrice,
                   )
                 ],

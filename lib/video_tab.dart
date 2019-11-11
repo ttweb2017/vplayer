@@ -17,7 +17,7 @@ class VideoTab extends StatefulWidget {
 
 class _VideoTabState extends State<VideoTab> {
   List<CameraDescription> cameras;
-  String _url = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
+  String _url = "https://voicetm.com/videos/e582ecdc-df1f-40dd-b222-2f67c1315a9a.SampleVideo_1280x720_2mb.mp4";//full
 
   _VideoTabState(this.cameras);
 
