@@ -34,7 +34,8 @@ class Singer {
   final String name;
   final int price;
 
-  String get assetName => '$id-0.jpg';
+  //String get assetName => '$id-0.jpg';
+  String get assetName => 'http://voicetm.com/img/singer/$avatar';
   String get assetPackage => 'shrine_images';
 
   @override

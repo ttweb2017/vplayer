@@ -31,9 +31,9 @@ class SingerRowItem extends StatelessWidget {
         children: <Widget>[
           ClipRRect(
             borderRadius: BorderRadius.circular(4),
-            child: Image.asset(
+            child: Image.network(
               singer.assetName,
-              package: singer.assetPackage,
+              //package: singer.assetPackage,
               fit: BoxFit.cover,
               width: 76,
               height: 76,
