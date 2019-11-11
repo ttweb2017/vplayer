@@ -269,7 +269,9 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
             width: 90.0,
             child: CupertinoButton(
               child: Icon(getCameraLensIcon(cameraDescription.lensDirection)),
-              onPressed: controller != null && controller.value.isRecordingVideo ? null : null,
+              onPressed: (){
+                controller != null && controller.value.isRecordingVideo ? null : onNewCameraSelected(cameraDescription);
+              }
             )/*RadioListTile<CameraDescription>(
               title: Icon(getCameraLensIcon(cameraDescription.lensDirection)),
               groupValue: controller?.description,

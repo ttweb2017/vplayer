@@ -1,5 +1,5 @@
-import 'package:chewie/chewie.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:chewie/chewie.dart';
 import 'package:video_player/video_player.dart';
 
 class ChewieListItem extends StatefulWidget {

@@ -1,13 +1,13 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:karaoke/camera_player_screen.dart';
-import 'package:karaoke/search_tab.dart';
-import 'package:karaoke/singer_list_tab.dart';
-import 'package:karaoke/song_list_tab.dart';
-import 'package:karaoke/video_tab.dart';
 import 'package:provider/provider.dart';
+import 'camera_player_screen.dart';
 import 'model/app_state_model.dart';
+import 'search_tab.dart';
+import 'singer_list_tab.dart';
+import 'song_list_tab.dart';
+import 'video_tab.dart';
 
 /*void main() {
   return runApp(

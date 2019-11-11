@@ -1,7 +1,11 @@
 import 'package:flutter/foundation.dart' as foundation;
+import 'package:karaoke/Constants.dart';
 
 import 'singer.dart';
 import 'singer_repository.dart';
+
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 double _salesTaxRate = 0.06;
 double _shippingCostPerItem = 7;
@@ -117,13 +121,48 @@ class AppStateModel extends foundation.ChangeNotifier {
   }
 
   // Loads the list of available singers from the repo.
-  void loadSingers() {
-    _availableSingers = SingersRepository.loadSingers(Category.all);
+  void loadSingers() async {
+    //_availableSingers = SingersRepository.loadSingers(Category.all);
+    _availableSingers = await _fetchSingers();
     notifyListeners();
   }
 
   void setCategory(Category newCategory) {
     _selectedCategory = newCategory;
     notifyListeners();
+  }
+
+  //Method to get user data from server
+  Future<List<Singer>> _fetchSingers() async {
+    List<Singer> singerList = List<Singer>();
+
+    try{
+      final response = await http.get(
+          Constants.SINGERS_PATH
+      );
+
+      if (response.statusCode == 200) {
+        // If server returns an OK response, parse the JSON.
+        var singers = json.decode(response.body) as List;
+
+        singerList = singers.map((i) => Singer.fromJson(i)).toList();
+
+        singerList.forEach((singer) {
+          print("Singers: " + singer.id.toString());
+        });
+
+        print("Karaoke response: " + response.statusCode.toString());
+
+        return singerList;
+
+      } else {
+        // If that response was not OK, throw an error.
+        print("Karaoke response code: " + response.statusCode.toString());
+      }
+    }catch(e){
+      print("Could not connect to api. Check internet connectivity! Reason: " + e.toString());
+    }
+
+    return null;
   }
 }

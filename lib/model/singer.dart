@@ -2,26 +2,34 @@ import 'package:flutter/foundation.dart';
 
 enum Category {
   all,
-  accessories,
-  clothing,
-  home,
+  pop,
+  rock,
+  rap,
+  rnb,
+  disco
 }
 
 class Singer {
   const Singer({
     @required this.category,
     @required this.id,
-    @required this.isFeatured,
-    @required this.name,
-    @required this.price,
+    @required this.firstName,
+    @required this.lastName,
+    @required this.avatar,
+    this.isFeatured,
+    this.name,
+    this.price,
   })  : assert(category != null),
         assert(id != null),
-        assert(isFeatured != null),
-        assert(name != null),
-        assert(price != null);
+        assert(firstName != null),
+        assert(lastName != null),
+        assert(avatar != null);
 
   final Category category;
   final int id;
+  final String firstName;
+  final String lastName;
+  final String avatar;
   final bool isFeatured;
   final String name;
   final int price;
@@ -31,4 +39,16 @@ class Singer {
 
   @override
   String toString() => '$name (id=$id)';
+
+  factory Singer.fromJson(Map<String, dynamic> json) {
+
+    return Singer(
+      category: Category.all,
+      id: json['id'],
+      firstName: json['firstName'],
+      lastName: json['lastName'],
+      avatar: json['avatar'],
+      name: json['firstName'] + " " + json['lastName']
+    );
+  }
 }
