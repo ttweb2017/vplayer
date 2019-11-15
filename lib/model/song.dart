@@ -22,7 +22,7 @@ class Song {
 
   String get assetName => Constants.VIDEO_PATH + '/$avatar';
   String get videoName => Constants.VIDEO_PATH + '/$video';
-  String get videoUrl => Constants.VIDEO_URL + '/$video';
+  String get videoUrl => Constants.VIDEO_URL + '/$video' + '/full';
 
   @override
   String toString() => '$name (id=$id)';

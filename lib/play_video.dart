@@ -23,6 +23,14 @@ class _PlayVideoState extends State<PlayVideo> {
 
   _PlayVideoState(this.song, this.cameras);
 
+  /*_controller.addListener(() {
+  if (_controller.value.hasError) {
+  print(_controller.value.errorDescription);
+  }
+  if (_controller.value.initialized) {}
+  if (_controller.value.isBuffering) {}
+  });*/
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery
