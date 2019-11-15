@@ -1,22 +1,30 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:karaoke/song_row_item.dart';
 import 'package:provider/provider.dart';
 
 import 'model/app_state_model.dart';
-import 'singer_row_item.dart';
 import 'search_bar.dart';
 import 'styles.dart';
 
 class SearchTab extends StatefulWidget {
+  SearchTab({Key key, this.cameras}) : super(key: key);
+
+  final List<CameraDescription> cameras;
+
   @override
   _SearchTabState createState() {
-    return _SearchTabState();
+    return _SearchTabState(cameras);
   }
 }
 
 class _SearchTabState extends State<SearchTab> {
+  List<CameraDescription> cameras;
   TextEditingController _controller;
   FocusNode _focusNode;
   String _terms = '';
+
+  _SearchTabState(this.cameras);
 
   @override
   void initState() {
@@ -51,7 +59,7 @@ class _SearchTabState extends State<SearchTab> {
   @override
   Widget build(BuildContext context) {
     final model = Provider.of<AppStateModel>(context);
-    final results = model.search(_terms);
+    final results = model.searchSong(_terms);
 
     return DecoratedBox(
       decoration: const BoxDecoration(
@@ -63,10 +71,11 @@ class _SearchTabState extends State<SearchTab> {
             _buildSearchBox(),
             Expanded(
               child: ListView.builder(
-                itemBuilder: (context, index) => SingerRowItem(
+                itemBuilder: (context, index) => SongRowItem(
                   index: index,
-                  singer: results[index],
+                  song: results[index],
                   lastItem: index == results.length - 1,
+                  cameras: cameras,
                 ),
                 itemCount: results.length,
               ),

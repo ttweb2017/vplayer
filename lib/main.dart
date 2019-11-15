@@ -31,7 +31,7 @@ Future<void> main() async {
 
   runApp(
       ChangeNotifierProvider<AppStateModel>(
-        builder: (context) => AppStateModel()..loadSingers(),
+        builder: (context) => AppStateModel()..loadData(),
         child: KaraokeApp(),
       )
   );
@@ -75,20 +75,16 @@ class _KaraokePageState extends State<KaraokePage> {
       tabBar: CupertinoTabBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.group),
-            title: Text('Singers'),
+            icon: Icon(CupertinoIcons.music_note),
+            title: Text('Songs'),
           ),
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.search),
             title: Text('Search'),
           ),
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.music_note),
-            title: Text('Songs'),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.video_camera),
-            title: Text('Video'),
+            icon: Icon(CupertinoIcons.group),
+            title: Text('Singers'),
           ),
         ],
       ),
@@ -98,28 +94,21 @@ class _KaraokePageState extends State<KaraokePage> {
           case 0:
             returnValue = CupertinoTabView(builder: (context) {
               return CupertinoPageScaffold(
-                child: SingerListTab(),
+                child: SongListTab(cameras: cameras),
               );
             });
             break;
           case 1:
             returnValue = CupertinoTabView(builder: (context) {
               return CupertinoPageScaffold(
-                child: SearchTab(),
+                child: SearchTab(cameras: cameras),
               );
             });
             break;
           case 2:
             returnValue = CupertinoTabView(builder: (context) {
               return CupertinoPageScaffold(
-                child: SongListTab(),
-              );
-            });
-            break;
-          case 3:
-            returnValue = CupertinoTabView(builder: (context){
-              return CupertinoPageScaffold(
-                child: VideoTab(cameras: cameras),
+                child: SingerListTab(cameras: cameras),
               );
             });
             break;

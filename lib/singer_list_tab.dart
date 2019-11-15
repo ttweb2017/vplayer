@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:karaoke/singer_row_item.dart';
 import 'package:provider/provider.dart';
@@ -5,6 +6,9 @@ import 'package:provider/provider.dart';
 import 'model/app_state_model.dart';
 
 class SingerListTab extends StatelessWidget {
+  SingerListTab({Key key, this.cameras}) : super(key: key);
+
+  final List<CameraDescription> cameras;
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +32,7 @@ class SingerListTab extends StatelessWidget {
                         index: index,
                         singer: singers[index],
                         lastItem: index == singers.length - 1,
+                        cameras: cameras,
                       );
                     }
 

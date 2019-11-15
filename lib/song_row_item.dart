@@ -1,22 +1,22 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:karaoke/singer_songs.dart';
+import 'package:karaoke/model/song.dart';
+import 'package:karaoke/play_video.dart';
 import 'package:provider/provider.dart';
 
 import 'model/app_state_model.dart';
-import 'model/singer.dart';
 import 'styles.dart';
 
-class SingerRowItem extends StatelessWidget {
-  const SingerRowItem({
+class SongRowItem extends StatelessWidget {
+  const SongRowItem({
     this.index,
-    this.singer,
+    this.song,
     this.lastItem,
     this.cameras
   });
 
   final List<CameraDescription> cameras;
-  final Singer singer;
+  final Song song;
   final int index;
   final bool lastItem;
 
@@ -36,8 +36,7 @@ class SingerRowItem extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(4),
             child: Image.network(
-              singer.assetName,
-              //package: singer.assetPackage,
+              song.assetName,
               fit: BoxFit.cover,
               width: 76,
               height: 76,
@@ -51,12 +50,12 @@ class SingerRowItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    singer.name,
+                    song.name,
                     style: Styles.singerRowItemName,
                   ),
                   const Padding(padding: EdgeInsets.only(top: 8)),
                   Text(
-                    '${singer.category}',
+                    '${song.singer.name}',
                     style: Styles.singerRowItemPrice,
                   )
                 ],
@@ -66,22 +65,23 @@ class SingerRowItem extends StatelessWidget {
           CupertinoButton(
             padding: EdgeInsets.zero,
             onPressed: () {
-              final model = Provider.of<AppStateModel>(context);
-              model.playSong(singer.id);
-              print("Singer: " + singer.name);
+              //final model = Provider.of<AppStateModel>(context);
+              //model.playSong(song.id);
+              print("Song Name: " + song.name);
+              print("Song Url: " + song.videoUrl);
 
               Navigator.of(context, rootNavigator: true).push(
                 CupertinoPageRoute<bool>(
                   fullscreenDialog: true,
-                  builder: (BuildContext context) => SingerSongsScreen(
-                      singer: singer,
+                  builder: (BuildContext context) => PlayVideo(
+                      song: song,
                       cameras: cameras
                   ),
                 ),
               );
             },
             child: const Icon(
-              CupertinoIcons.forward,
+              CupertinoIcons.play_arrow,
               semanticLabel: 'Play',
             ),
           ),

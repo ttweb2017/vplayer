@@ -1,66 +1,31 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart' as foundation;
+import 'package:http/http.dart' as http;
 import 'package:karaoke/Constants.dart';
+import 'package:karaoke/model/song.dart';
 
 import 'singer.dart';
-import 'singer_repository.dart';
-
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-
-double _salesTaxRate = 0.06;
-double _shippingCostPerItem = 7;
 
 class AppStateModel extends foundation.ChangeNotifier {
   // All the available singers.
   List<Singer> _availableSingers;
 
+  // All the available songs
+  List<Song> _availableSongs;
+
   // The currently selected category of singers.
   Category _selectedCategory = Category.all;
-
-  // The IDs and quantities of singers currently in the cart.
-  final _singersInCart = <int, int>{};
-
-  Map<int, int> get singersInCart {
-    return Map.from(_singersInCart);
-  }
-
-  // Total number of items in the cart.
-  int get totalCartQuantity {
-    return _singersInCart.values.fold(0, (accumulator, value) {
-      return accumulator + value;
-    });
-  }
 
   Category get selectedCategory {
     return _selectedCategory;
   }
 
-  // Totaled prices of the items in the cart.
-  double get subtotalCost {
-    return _singersInCart.keys.map((id) {
-      // Extended price for singer line
-      return _availableSingers[id].price * _singersInCart[id];
-    }).fold(0, (accumulator, extendedPrice) {
-      return accumulator + extendedPrice;
-    });
-  }
+  // The currently selected category of singers.
+  Singer _selectedSinger;
 
-  // Total shipping cost for the items in the cart.
-  double get shippingCost {
-    return _shippingCostPerItem *
-        _singersInCart.values.fold(0.0, (accumulator, itemCount) {
-          return accumulator + itemCount;
-        });
-  }
-
-  // Sales tax for the items in the cart
-  double get tax {
-    return subtotalCost * _salesTaxRate;
-  }
-
-  // Total cost to order everything in the cart.
-  double get totalCost {
-    return subtotalCost + shippingCost + tax;
+  Singer get selectedSinger {
+    return _selectedSinger;
   }
 
   // Returns a copy of the list of available singers, filtered by category.
@@ -78,6 +43,21 @@ class AppStateModel extends foundation.ChangeNotifier {
     }
   }
 
+  // Returns a copy of the list of available songs, filtered by category.
+  List<Song> getSongs() {
+    if (_availableSongs == null) {
+      return [];
+    }
+
+    if (_selectedSinger == null) {
+      return List.from(_availableSongs);
+    } else {
+      return _availableSongs.where((p) {
+        return p.singer == _selectedSinger;
+      }).toList();
+    }
+  }
+
   // Search the singer catalog
   List<Singer> search(String searchTerms) {
     return getSingers().where((singer) {
@@ -85,39 +65,27 @@ class AppStateModel extends foundation.ChangeNotifier {
     }).toList();
   }
 
-  // Adds a singer to the cart.
-  void addSingerToCart(int singerId) {
-    if (!_singersInCart.containsKey(singerId)) {
-      _singersInCart[singerId] = 1;
-    } else {
-      _singersInCart[singerId]++;
-    }
-
-    notifyListeners();
+  // Search the song
+  List<Song> searchSong(String searchTerms) {
+    return getSongs().where((song) {
+      return song.name.toLowerCase().contains(searchTerms.toLowerCase())
+          || song.singer.name.toLowerCase().contains(searchTerms.toLowerCase());
+    }).toList();
   }
 
-  // Removes an item from the cart.
-  void removeItemFromCart(int singerId) {
-    if (_singersInCart.containsKey(singerId)) {
-      if (_singersInCart[singerId] == 1) {
-        _singersInCart.remove(singerId);
-      } else {
-        _singersInCart[singerId]--;
-      }
-    }
-
-    notifyListeners();
+  List<Song> searchSongBySinger(Singer singer){
+    return getSongs().where((song) {
+      return song.singer.id == singer.id;
+    }).toList();
   }
-
   // Returns the singer instance matching the provided id.
   Singer getSingerById(int id) {
     return _availableSingers.firstWhere((p) => p.id == id);
   }
 
-  // Removes everything from the cart.
-  void clearCart() {
-    _singersInCart.clear();
-    notifyListeners();
+  // Returns the song instance matching the provided id.
+  Song getSongById(int id) {
+    return _availableSongs.firstWhere((p) => p.id == id);
   }
 
   // Loads the list of available singers from the repo.
@@ -127,18 +95,52 @@ class AppStateModel extends foundation.ChangeNotifier {
     notifyListeners();
   }
 
+  void loadSongs() async {
+    _availableSongs = await _fetchSongs();
+    notifyListeners();
+  }
+
+  void loadData(){
+    // Load Singers list
+    loadSingers();
+
+    // Load Songs
+    loadSongs();
+  }
+
   void setCategory(Category newCategory) {
     _selectedCategory = newCategory;
     notifyListeners();
   }
 
-  //Method to get user data from server
+  void setSinger(Singer newSinger) {
+    _selectedSinger = newSinger;
+    notifyListeners();
+  }
+
+  //Play selected song
+  void playSong(int songId){
+
+  }
+
+  // Adds a product to the cart.
+  /*void addProductToCart(int productId) {
+    if (!_productsInCart.containsKey(productId)) {
+      _productsInCart[productId] = 1;
+    } else {
+      _productsInCart[productId]++;
+    }
+
+    notifyListeners();
+  }*/
+
+  //Method to get singer list from server
   Future<List<Singer>> _fetchSingers() async {
     List<Singer> singerList = List<Singer>();
 
     try{
       final response = await http.get(
-          Constants.SINGERS_PATH
+          Constants.SINGERS_URL
       );
 
       if (response.statusCode == 200) {
@@ -154,6 +156,40 @@ class AppStateModel extends foundation.ChangeNotifier {
         print("Karaoke response: " + response.statusCode.toString());
 
         return singerList;
+
+      } else {
+        // If that response was not OK, throw an error.
+        print("Karaoke response code: " + response.statusCode.toString());
+      }
+    }catch(e){
+      print("Could not connect to api. Check internet connectivity! Reason: " + e.toString());
+    }
+
+    return null;
+  }
+
+  //Method to get song list from server
+  Future<List<Song>> _fetchSongs() async {
+    List<Song> songList = List<Song>();
+
+    try{
+      final response = await http.get(
+          Constants.VIDEO_URL
+      );
+
+      if (response.statusCode == 200) {
+        // If server returns an OK response, parse the JSON.
+        var songs = json.decode(response.body) as List;
+
+        songList = songs.map((i) => Song.fromJson(i)).toList();
+
+        songList.forEach((singer) {
+          print("Songs: " + singer.id.toString());
+        });
+
+        print("Karaoke response: " + response.statusCode.toString());
+
+        return songList;
 
       } else {
         // If that response was not OK, throw an error.
