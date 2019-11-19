@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:karaoke/Constants.dart';
 
 enum Category {
   all,
@@ -35,7 +36,7 @@ class Singer {
   final int price;
 
   //String get assetName => '$id-0.jpg';
-  String get assetName => 'http://voicetm.com/img/singer/$avatar';
+  String get assetName => Constants.SINGERS_PATH + '/$avatar';
   String get assetPackage => 'shrine_images';
 
   @override

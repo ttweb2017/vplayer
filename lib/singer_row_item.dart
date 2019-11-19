@@ -39,8 +39,8 @@ class SingerRowItem extends StatelessWidget {
               singer.assetName,
               //package: singer.assetPackage,
               fit: BoxFit.cover,
-              width: 76,
-              height: 76,
+              width: 56,
+              height: 56,
             ),
           ),
           Expanded(

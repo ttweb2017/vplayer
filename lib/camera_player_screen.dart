@@ -50,12 +50,15 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    onNewCameraSelected(cameras.first);
+    onVideoRecordButtonPressed();
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+    onStopButtonPressed();
   }
 
   @override
@@ -95,7 +98,7 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
                   color: controller != null && controller.value.isRecordingVideo
                       ? Color(0xFFFF0000)
                       : Color(0xFFC2C2C2),
-                  width: 25.0,
+                  width: 1.0,
                 ),
               ),
             ),
@@ -119,7 +122,11 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
 
   /// Display the preview from the camera (or a message if the preview is not available).
   Widget _cameraPreviewWidget() {
-    if (controller == null || !controller.value.isInitialized) {
+    return AspectRatio(
+      aspectRatio: controller.value.aspectRatio,
+      child: CameraPreview(controller),
+    );
+    /*if (controller == null || !controller.value.isInitialized) {
       return const Text(
         'Tap a camera',
         style: TextStyle(
@@ -133,7 +140,7 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
         aspectRatio: controller.value.aspectRatio,
         child: CameraPreview(controller),
       );
-    }
+    }*/
   }
 
   /// Toggle recording audio

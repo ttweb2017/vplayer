@@ -38,8 +38,8 @@ class SongRowItem extends StatelessWidget {
             child: Image.network(
               song.assetName,
               fit: BoxFit.cover,
-              width: 76,
-              height: 76,
+              width: 56,
+              height: 56,
             ),
           ),
           Expanded(

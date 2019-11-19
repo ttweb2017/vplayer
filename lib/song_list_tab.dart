@@ -1,6 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:karaoke/song_row_item.dart';
+import 'package:karaoke/song_row_item_with_tap.dart';
 import 'package:provider/provider.dart';
 
 import 'model/app_state_model.dart';
@@ -28,7 +29,7 @@ class SongListTab extends StatelessWidget {
                 delegate: SliverChildBuilderDelegate(
                       (context, index) {
                     if (index < songs.length) {
-                      return SongRowItem(
+                      return SongRowTapItem(
                         index: index,
                         song: songs[index],
                         lastItem: index == songs.length - 1,

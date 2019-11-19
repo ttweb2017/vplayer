@@ -19,17 +19,9 @@ class PlayVideo extends StatefulWidget {
 class _PlayVideoState extends State<PlayVideo> {
   List<CameraDescription> cameras;
   Song song;
-  String _url = "https://voicetm.com/videos/e582ecdc-df1f-40dd-b222-2f67c1315a9a.SampleVideo_1280x720_2mb.mp4"; //full
+  String _url = "https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4"; //full
 
   _PlayVideoState(this.song, this.cameras);
-
-  /*_controller.addListener(() {
-  if (_controller.value.hasError) {
-  print(_controller.value.errorDescription);
-  }
-  if (_controller.value.initialized) {}
-  if (_controller.value.isBuffering) {}
-  });*/
 
   @override
   Widget build(BuildContext context) {
@@ -53,14 +45,14 @@ class _PlayVideoState extends State<PlayVideo> {
           ChewieListItem(
             // This URL doesn't exist - will display an error
             videoPlayerController: VideoPlayerController.network(
-              song.videoUrl,
+              song.fullVideoUrl,
             ),
             autoPlay: true,
-            looping: true,
+            looping: false,
           ),
           Container(
             width: width,
-            height: 300.0,
+            height: 400.0,
             child: CameraScreen(
               cameras: cameras,
             ),
