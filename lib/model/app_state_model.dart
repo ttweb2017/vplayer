@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/foundation.dart' as foundation;
 import 'package:http/http.dart' as http;
@@ -56,6 +57,18 @@ class AppStateModel extends foundation.ChangeNotifier {
         return p.singer == _selectedSinger;
       }).toList();
     }
+  }
+
+  List<Song> getPopularSongs(){
+    if (_availableSongs == null) {
+      return [];
+    }
+
+    return _availableSongs.where((p) {
+      int random = new Random().nextInt(_availableSongs.length * 2);
+
+      return _availableSongs.asMap().containsKey(random);
+    }).toList();
   }
 
   // Search the singer catalog

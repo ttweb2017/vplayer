@@ -7,4 +7,5 @@ class Constants{
   static const String PARTLY_VIDEO_URL = KARAOKE_URL + "/api/video";
   static const String SINGERS_PATH = KARAOKE_URL + "/img/singer";
   static const String VIDEO_PATH = KARAOKE_URL + "/img/videos";
+  static const String SAVED_VIDEO_PATH = "/KaraokeVideos";
 }

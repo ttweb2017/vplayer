@@ -7,20 +7,24 @@ import 'package:provider/provider.dart';
 import 'model/app_state_model.dart';
 
 class SongListTab extends StatelessWidget {
-  SongListTab({Key key, this.cameras}) : super(key: key);
+  SongListTab({Key key, @required this.cameras, @required this.isPopular}) : super(key: key);
 
   final List<CameraDescription> cameras;
+  final bool isPopular;
 
   @override
   Widget build(BuildContext context) {
+
     return Consumer<AppStateModel>(
       builder: (context, model, child) {
-        final songs = model.getSongs();
+        final songs = isPopular ? model.getPopularSongs() : model.getSongs();
+        final String title = isPopular ? 'Popular Songs' : 'Songs';
+
         return CustomScrollView(
           semanticChildCount: songs.length,
           slivers: <Widget>[
-            const CupertinoSliverNavigationBar(
-              largeTitle: Text('Songs'),
+            CupertinoSliverNavigationBar(
+              largeTitle: Text(title),
             ),
             SliverSafeArea(
               top: false,

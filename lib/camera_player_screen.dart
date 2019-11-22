@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:karaoke/Constants.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:video_player/video_player.dart';
 
@@ -80,6 +81,47 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
 
   @override
   Widget build(BuildContext context) {
+    //double height = MediaQuery.of(context).size.height;
+    return Container(
+      //key: _scaffoldKey,
+      child: Column(
+        children: <Widget>[
+          Stack(
+            children: <Widget>[
+              Container(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Center(
+                    child: _videoCameraPreviewWidget(),
+                  ),
+                ),
+                decoration: BoxDecoration(
+                  color: Color(0xFFFFFFFF),
+                  border: Border.all(
+                    color: controller != null && controller.value.isRecordingVideo
+                        ? Color(0xFFFF0000)
+                        : Color(0xFFC2C2C2),
+                    width: 1.0,
+                  ),
+                ),
+              ),
+              Positioned.fill(
+                top: 200.0,
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child:  _recordControlWidget(),
+                ),
+              )
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  /* Old Version
+  @override
+  Widget build(BuildContext context) {
     return Container(
       //key: _scaffoldKey,
       child: Column(
@@ -87,7 +129,7 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
           Expanded(
             child: Container(
               child: Padding(
-                padding: const EdgeInsets.all(0.5),
+                padding: const EdgeInsets.all(1.0),
                 child: Center(
                   child: _cameraPreviewWidget(),
                 ),
@@ -106,7 +148,7 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
           _captureControlRowWidget(),
           _toggleAudioWidget(),
           Padding(
-            padding: const EdgeInsets.all(5.0),
+            padding: const EdgeInsets.all(1.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
@@ -117,6 +159,14 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
           ),
         ],
       ),
+    );
+  }*/
+
+  /// Display the preview from the camera (or a message if the preview is not available).
+  Widget _videoCameraPreviewWidget() {
+    return AspectRatio(
+      aspectRatio: 1,
+      child: CameraPreview(controller)
     );
   }
 
@@ -193,6 +243,30 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
               height: 64.0,
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  /// Display the control button to record videos.
+  Widget _recordControlWidget(){
+    return Center(
+      child: Container(
+        width: 72,
+        height: 72,
+        padding: EdgeInsets.all(2.0),
+        child: CupertinoButton.filled(
+          child: controller != null && controller.value.isRecordingVideo
+              ? Icon(CupertinoIcons.clear_circled)
+              : Icon(CupertinoIcons.play_arrow),
+          disabledColor: Color(0xFFFF0000),
+          borderRadius: BorderRadius.circular(36.0),
+          pressedOpacity: 0.5,
+          onPressed: controller != null &&
+              controller.value.isInitialized &&
+              !controller.value.isRecordingVideo
+              ? onVideoRecordButtonPressed
+              : onStopButtonPressed,
         ),
       ),
     );
@@ -380,8 +454,9 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
       return null;
     }
 
-    final Directory extDir = await getApplicationDocumentsDirectory();
-    final String dirPath = '${extDir.path}/Movies/flutter_test';
+    //final Directory extDir = await getApplicationDocumentsDirectory();
+    final Directory extDir = await getExternalStorageDirectory();
+    final String dirPath = '${extDir.path}' + Constants.SAVED_VIDEO_PATH;
     await Directory(dirPath).create(recursive: true);
     final String filePath = '$dirPath/${timestamp()}.mp4';
 
@@ -391,6 +466,7 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
     }
 
     try {
+      print("FILE LOCATION: " + filePath);
       videoPath = filePath;
       await controller.startVideoRecording(filePath);
     } on CameraException catch (e) {
@@ -489,6 +565,7 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
   }
 
   void _showCameraException(CameraException e) {
+    print("CAMERA EXCEPTION::::::::::::" + e.description);
     logError(e.code, e.description);
     showInSnackBar('Error: ${e.code}\n${e.description}');
   }

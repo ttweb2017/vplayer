@@ -52,7 +52,7 @@ class _PlayVideoState extends State<PlayVideo> {
           ),
           Container(
             width: width,
-            height: 400.0,
+            height: height - 280.0,
             child: CameraScreen(
               cameras: cameras,
             ),

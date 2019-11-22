@@ -75,16 +75,20 @@ class _KaraokePageState extends State<KaraokePage> {
       tabBar: CupertinoTabBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.mic),
+            title: Text('Populars'),
+          ),
+          BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.music_note),
             title: Text('Songs'),
           ),
           BottomNavigationBarItem(
-            icon: Icon(CupertinoIcons.search),
-            title: Text('Search'),
-          ),
-          BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.group),
             title: Text('Singers'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.search),
+            title: Text('Search'),
           ),
         ],
       ),
@@ -94,14 +98,14 @@ class _KaraokePageState extends State<KaraokePage> {
           case 0:
             returnValue = CupertinoTabView(builder: (context) {
               return CupertinoPageScaffold(
-                child: SongListTab(cameras: cameras),
+                child: SongListTab(cameras: cameras, isPopular: true),
               );
             });
             break;
           case 1:
             returnValue = CupertinoTabView(builder: (context) {
               return CupertinoPageScaffold(
-                child: SearchTab(cameras: cameras),
+                child: SongListTab(cameras: cameras, isPopular: false),
               );
             });
             break;
@@ -109,6 +113,13 @@ class _KaraokePageState extends State<KaraokePage> {
             returnValue = CupertinoTabView(builder: (context) {
               return CupertinoPageScaffold(
                 child: SingerListTab(cameras: cameras),
+              );
+            });
+            break;
+          case 3:
+            returnValue = CupertinoTabView(builder: (context) {
+              return CupertinoPageScaffold(
+                child: SearchTab(cameras: cameras),
               );
             });
             break;
