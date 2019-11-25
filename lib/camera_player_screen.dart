@@ -51,8 +51,7 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    onNewCameraSelected(cameras.first);
-    onVideoRecordButtonPressed();
+    onNewCameraSelected(cameras.last);
   }
 
   @override
@@ -420,7 +419,6 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
   }
 
   void onVideoRecordButtonPressed() {
-    logError("111", "start recording video");
     startVideoRecording().then((String filePath) {
       if (mounted) setState(() {});
       if (filePath != null) showInSnackBar('Saving video to $filePath');
@@ -454,8 +452,8 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
       return null;
     }
 
-    //final Directory extDir = await getApplicationDocumentsDirectory();
-    final Directory extDir = await getExternalStorageDirectory();
+    final Directory extDir = await getApplicationDocumentsDirectory();
+    //final Directory extDir = await getExternalStorageDirectory();
     final String dirPath = '${extDir.path}' + Constants.SAVED_VIDEO_PATH;
     await Directory(dirPath).create(recursive: true);
     final String filePath = '$dirPath/${timestamp()}.mp4';
