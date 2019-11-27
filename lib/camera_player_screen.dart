@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gallery_saver/gallery_saver.dart';
 import 'package:karaoke/Constants.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:video_player/video_player.dart';
@@ -421,7 +422,10 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
   void onVideoRecordButtonPressed() {
     startVideoRecording().then((String filePath) {
       if (mounted) setState(() {});
-      if (filePath != null) showInSnackBar('Saving video to $filePath');
+      if (filePath != null) {
+        GallerySaver.saveVideo(filePath);//TODO chack this line later
+        showInSnackBar('Saving video to $filePath');
+      }
     });
   }
 
@@ -445,6 +449,23 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
       showInSnackBar('Video recording resumed');
     });
   }
+
+  /*void _recordVideo() async {
+    ImagePicker.pickVideo(source: ImageSource.camera)
+        .then((File recordedVideo) {
+      if (recordedVideo != null && recordedVideo.path != null) {
+        setState(() {
+          secondButtonText = 'saving in progress...';
+        });
+        GallerySaver.saveVideo(recordedVideo.path).then((String path) {
+          /*setState(() {
+            secondButtonText = 'video saved!';
+          });*/
+          print("video saved");
+        });
+      }
+    });
+  }*/
 
   Future<String> startVideoRecording() async {
     if (!controller.value.isInitialized) {
@@ -486,7 +507,7 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
       return null;
     }
 
-    await _startVideoPlayer();
+    //await _startVideoPlayer();
   }
 
   Future<void> pauseVideoRecording() async {
