@@ -2,7 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:karaoke/model/song.dart';
 import 'package:karaoke/play_video.dart';
-import 'package:karaoke/play_video_test.dart';
+
 import 'styles.dart';
 
 class SongRowTapItem extends StatelessWidget {
@@ -81,7 +81,7 @@ class SongRowTapItem extends StatelessWidget {
                 Navigator.of(context, rootNavigator: true).push(
                   CupertinoPageRoute<bool>(
                     fullscreenDialog: true,
-                    builder: (BuildContext context) => VideoPlayerScreen(
+                    builder: (BuildContext context) => PlayVideo(
                         song: song,
                         cameras: cameras
                     ),

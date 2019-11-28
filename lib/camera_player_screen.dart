@@ -58,10 +58,10 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
     if(controller.value.isRecordingVideo){
       onStopButtonPressed();
     }
+    super.dispose();
   }
 
   @override
