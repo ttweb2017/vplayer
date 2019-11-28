@@ -59,7 +59,9 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
-    onStopButtonPressed();
+    if(controller.value.isRecordingVideo){
+      onStopButtonPressed();
+    }
   }
 
   @override
@@ -106,7 +108,7 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
                 ),
               ),
               Positioned.fill(
-                top: 200.0,
+                top: 240.0,
                 child: Align(
                   alignment: Alignment.bottomCenter,
                   child:  _recordControlWidget(),
@@ -117,6 +119,242 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
         ],
       ),
     );
+  }
+
+  /// Display the preview from the camera (or a message if the preview is not available).
+  Widget _videoCameraPreviewWidget() {
+    return AspectRatio(
+        aspectRatio: 1,
+        child: CameraPreview(controller)
+    );
+  }
+
+  /// Display the control button to record videos.
+  Widget _recordControlWidget(){
+    double width = MediaQuery.of(context).size.width;
+    return Center(
+      child: Container(
+        width: width,
+        height: 100,
+        decoration: BoxDecoration(
+            color: Color(0x50FFFFFF)
+        ),
+        padding: EdgeInsets.all(2.0),
+        child: CupertinoButton(
+          color: Color(0x000000),
+          child: _cameraControlWidget(),
+          pressedOpacity: 0.5,
+          onPressed: controller != null &&
+              controller.value.isInitialized &&
+              !controller.value.isRecordingVideo
+              ? onVideoRecordButtonPressed
+              : onStopButtonPressed,
+        ),
+      ),
+    );
+  }
+
+  Widget _cameraControlWidget(){
+    return Container(
+      height: 70,
+      width: 70,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(35.0),
+          border: Border.all(
+              color: controller != null && controller.value.isRecordingVideo
+                  ? Color(0xFF00BFFF)
+                  : Color(0xFFFF0000)
+          ),
+          color: controller != null && controller.value.isRecordingVideo
+              ? Color(0xFFFF0000)
+              : Color(0xFF00BFFF)
+      ),
+      child: Center(
+        child: controller != null && controller.value.isRecordingVideo
+            ? Icon(CupertinoIcons.share)
+            : Icon(CupertinoIcons.video_camera),
+      ),
+    );
+  }
+
+  String timestamp() => DateTime.now().millisecondsSinceEpoch.toString();
+
+  void showInSnackBar(String message) {
+    /*_scaffoldKey.currentState.showSnackBar(
+      SnackBar(content: Text(message))
+    );*/
+    print("SnackBar message::: " + message);
+  }
+
+  void onNewCameraSelected(CameraDescription cameraDescription) async {
+    if (controller != null) {
+      await controller.dispose();
+    }
+    controller = CameraController(
+      cameraDescription,
+      ResolutionPreset.medium,
+      enableAudio: enableAudio,
+    );
+
+    // If the controller is updated then update the UI.
+    controller.addListener(() {
+      if (mounted) setState(() {});
+      if (controller.value.hasError) {
+        showInSnackBar('Camera error ${controller.value.errorDescription}');
+      }
+    });
+
+    try {
+      await controller.initialize();
+    } on CameraException catch (e) {
+      _showCameraException(e);
+    }
+
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  void onTakePictureButtonPressed() {
+    takePicture().then((String filePath) {
+      if (mounted) {
+        setState(() {
+          imagePath = filePath;
+          videoController?.dispose();
+          videoController = null;
+        });
+        if (filePath != null) showInSnackBar('Picture saved to $filePath');
+      }
+    });
+  }
+
+  void onVideoRecordButtonPressed() {
+    startVideoRecording().then((String filePath) {
+      if (mounted) setState(() {});
+      if (filePath != null) {
+        showInSnackBar('Saving video to $filePath');
+      }
+    });
+  }
+
+  void onStopButtonPressed() {
+    stopVideoRecording().then((_) {
+      if (mounted) setState(() {});
+      GallerySaver.saveVideo(videoPath);
+      showInSnackBar('Video recorded to: $videoPath');
+    });
+  }
+
+  void onPauseButtonPressed() {
+    pauseVideoRecording().then((_) {
+      if (mounted) setState(() {});
+      showInSnackBar('Video recording paused');
+    });
+  }
+
+  void onResumeButtonPressed() {
+    resumeVideoRecording().then((_) {
+      if (mounted) setState(() {});
+      showInSnackBar('Video recording resumed');
+    });
+  }
+
+  Future<String> startVideoRecording() async {
+    if (!controller.value.isInitialized) {
+      showInSnackBar('Error: select a camera first.');
+      return null;
+    }
+
+    final Directory extDir = await getApplicationDocumentsDirectory();
+    //final Directory extDir = await getExternalStorageDirectory();
+    final String dirPath = '${extDir.path}' + Constants.SAVED_VIDEO_PATH;
+    await Directory(dirPath).create(recursive: true);
+    final String filePath = '$dirPath/${timestamp()}.mp4';
+
+    if (controller.value.isRecordingVideo) {
+      // A recording is already started, do nothing.
+      return null;
+    }
+
+    try {
+      print("FILE LOCATION: " + filePath);
+      videoPath = filePath;
+      await controller.startVideoRecording(filePath);
+    } on CameraException catch (e) {
+      _showCameraException(e);
+      return null;
+    }
+    return filePath;
+  }
+
+  Future<void> stopVideoRecording() async {
+    if (!controller.value.isRecordingVideo) {
+      return null;
+    }
+
+    try {
+      await controller.stopVideoRecording();
+    } on CameraException catch (e) {
+      _showCameraException(e);
+      return null;
+    }
+
+    //await _startVideoPlayer();
+  }
+
+  Future<void> pauseVideoRecording() async {
+    if (!controller.value.isRecordingVideo) {
+      return null;
+    }
+
+    try {
+      await controller.pauseVideoRecording();
+    } on CameraException catch (e) {
+      _showCameraException(e);
+      rethrow;
+    }
+  }
+
+  Future<void> resumeVideoRecording() async {
+    if (!controller.value.isRecordingVideo) {
+      return null;
+    }
+
+    try {
+      await controller.resumeVideoRecording();
+    } on CameraException catch (e) {
+      _showCameraException(e);
+      rethrow;
+    }
+  }
+
+  Future<String> takePicture() async {
+    if (!controller.value.isInitialized) {
+      showInSnackBar('Error: select a camera first.');
+      return null;
+    }
+    final Directory extDir = await getApplicationDocumentsDirectory();
+    final String dirPath = '${extDir.path}/Pictures/flutter_test';
+    await Directory(dirPath).create(recursive: true);
+    final String filePath = '$dirPath/${timestamp()}.jpg';
+
+    if (controller.value.isTakingPicture) {
+      // A capture is already pending, do nothing.
+      return null;
+    }
+
+    try {
+      await controller.takePicture(filePath);
+    } on CameraException catch (e) {
+      _showCameraException(e);
+      return null;
+    }
+    return filePath;
+  }
+
+  void _showCameraException(CameraException e) {
+    logError(e.code, e.description);
+    showInSnackBar('Error: ${e.code}\n${e.description}');
   }
 
   /* Old Version
@@ -161,14 +399,6 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
       ),
     );
   }*/
-
-  /// Display the preview from the camera (or a message if the preview is not available).
-  Widget _videoCameraPreviewWidget() {
-    return AspectRatio(
-      aspectRatio: 1,
-      child: CameraPreview(controller)
-    );
-  }
 
   /// Display the preview from the camera (or a message if the preview is not available).
   Widget _cameraPreviewWidget() {
@@ -249,17 +479,18 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
   }
 
   /// Display the control button to record videos.
-  Widget _recordControlWidget(){
+  /*Widget _recordControlWidget(){
+    double width = MediaQuery.of(context).size.width;
     return Center(
       child: Container(
-        width: 72,
-        height: 72,
+        width: width,
+        height: 100,
+        decoration: BoxDecoration(
+            color: Color(0x50FFFFFF)
+        ),
         padding: EdgeInsets.all(2.0),
         child: CupertinoButton.filled(
-          child: controller != null && controller.value.isRecordingVideo
-              ? Icon(CupertinoIcons.clear_circled)
-              : Icon(CupertinoIcons.play_arrow),
-          disabledColor: Color(0xFFFF0000),
+          child: _cameraControlWidget(),
           borderRadius: BorderRadius.circular(36.0),
           pressedOpacity: 0.5,
           onPressed: controller != null &&
@@ -270,7 +501,7 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
         ),
       ),
     );
-  }
+  }*/
 
   /// Display the control bar with buttons to take pictures and record videos.
   Widget _captureControlRowWidget() {
@@ -369,87 +600,6 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
     return Row(children: toggles);
   }
 
-  String timestamp() => DateTime.now().millisecondsSinceEpoch.toString();
-
-  void showInSnackBar(String message) {
-    /*_scaffoldKey.currentState.showSnackBar(
-      SnackBar(content: Text(message))
-    );*/
-  }
-
-  void onNewCameraSelected(CameraDescription cameraDescription) async {
-    if (controller != null) {
-      await controller.dispose();
-    }
-    controller = CameraController(
-      cameraDescription,
-      ResolutionPreset.medium,
-      enableAudio: enableAudio,
-    );
-
-    // If the controller is updated then update the UI.
-    controller.addListener(() {
-      if (mounted) setState(() {});
-      if (controller.value.hasError) {
-        showInSnackBar('Camera error ${controller.value.errorDescription}');
-      }
-    });
-
-    try {
-      await controller.initialize();
-    } on CameraException catch (e) {
-      _showCameraException(e);
-    }
-
-    if (mounted) {
-      setState(() {});
-    }
-  }
-
-  void onTakePictureButtonPressed() {
-    takePicture().then((String filePath) {
-      if (mounted) {
-        setState(() {
-          imagePath = filePath;
-          videoController?.dispose();
-          videoController = null;
-        });
-        if (filePath != null) showInSnackBar('Picture saved to $filePath');
-      }
-    });
-  }
-
-  void onVideoRecordButtonPressed() {
-    startVideoRecording().then((String filePath) {
-      if (mounted) setState(() {});
-      if (filePath != null) {
-        GallerySaver.saveVideo(filePath);//TODO chack this line later
-        showInSnackBar('Saving video to $filePath');
-      }
-    });
-  }
-
-  void onStopButtonPressed() {
-    stopVideoRecording().then((_) {
-      if (mounted) setState(() {});
-      showInSnackBar('Video recorded to: $videoPath');
-    });
-  }
-
-  void onPauseButtonPressed() {
-    pauseVideoRecording().then((_) {
-      if (mounted) setState(() {});
-      showInSnackBar('Video recording paused');
-    });
-  }
-
-  void onResumeButtonPressed() {
-    resumeVideoRecording().then((_) {
-      if (mounted) setState(() {});
-      showInSnackBar('Video recording resumed');
-    });
-  }
-
   /*void _recordVideo() async {
     ImagePicker.pickVideo(source: ImageSource.camera)
         .then((File recordedVideo) {
@@ -466,75 +616,6 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
       }
     });
   }*/
-
-  Future<String> startVideoRecording() async {
-    if (!controller.value.isInitialized) {
-      showInSnackBar('Error: select a camera first.');
-      return null;
-    }
-
-    final Directory extDir = await getApplicationDocumentsDirectory();
-    //final Directory extDir = await getExternalStorageDirectory();
-    final String dirPath = '${extDir.path}' + Constants.SAVED_VIDEO_PATH;
-    await Directory(dirPath).create(recursive: true);
-    final String filePath = '$dirPath/${timestamp()}.mp4';
-
-    if (controller.value.isRecordingVideo) {
-      // A recording is already started, do nothing.
-      return null;
-    }
-
-    try {
-      print("FILE LOCATION: " + filePath);
-      videoPath = filePath;
-      await controller.startVideoRecording(filePath);
-    } on CameraException catch (e) {
-      _showCameraException(e);
-      return null;
-    }
-    return filePath;
-  }
-
-  Future<void> stopVideoRecording() async {
-    if (!controller.value.isRecordingVideo) {
-      return null;
-    }
-
-    try {
-      await controller.stopVideoRecording();
-    } on CameraException catch (e) {
-      _showCameraException(e);
-      return null;
-    }
-
-    //await _startVideoPlayer();
-  }
-
-  Future<void> pauseVideoRecording() async {
-    if (!controller.value.isRecordingVideo) {
-      return null;
-    }
-
-    try {
-      await controller.pauseVideoRecording();
-    } on CameraException catch (e) {
-      _showCameraException(e);
-      rethrow;
-    }
-  }
-
-  Future<void> resumeVideoRecording() async {
-    if (!controller.value.isRecordingVideo) {
-      return null;
-    }
-
-    try {
-      await controller.resumeVideoRecording();
-    } on CameraException catch (e) {
-      _showCameraException(e);
-      rethrow;
-    }
-  }
 
   Future<void> _startVideoPlayer() async {
     final VideoPlayerController vcontroller =
@@ -557,35 +638,5 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
       });
     }
     await vcontroller.play();
-  }
-
-  Future<String> takePicture() async {
-    if (!controller.value.isInitialized) {
-      showInSnackBar('Error: select a camera first.');
-      return null;
-    }
-    final Directory extDir = await getApplicationDocumentsDirectory();
-    final String dirPath = '${extDir.path}/Pictures/flutter_test';
-    await Directory(dirPath).create(recursive: true);
-    final String filePath = '$dirPath/${timestamp()}.jpg';
-
-    if (controller.value.isTakingPicture) {
-      // A capture is already pending, do nothing.
-      return null;
-    }
-
-    try {
-      await controller.takePicture(filePath);
-    } on CameraException catch (e) {
-      _showCameraException(e);
-      return null;
-    }
-    return filePath;
-  }
-
-  void _showCameraException(CameraException e) {
-    print("CAMERA EXCEPTION::::::::::::" + e.description);
-    logError(e.code, e.description);
-    showInSnackBar('Error: ${e.code}\n${e.description}');
   }
 }
