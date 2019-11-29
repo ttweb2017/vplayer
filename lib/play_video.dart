@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:karaoke/camera_player_screen.dart';
 import 'package:karaoke/chewie_list_item.dart';
 import 'package:karaoke/model/song.dart';
+import 'package:karaoke/splash_screen.dart';
 import 'package:video_player/video_player.dart';
 
 class PlayVideo extends StatefulWidget {
@@ -77,7 +78,7 @@ class _PlayVideoState extends State<PlayVideo> {
                     ),
                   )
                 ])
-             : Center(child: CupertinoActivityIndicator());
+             : SplashScreen(); //Center(child: CupertinoActivityIndicator());
         },
       ),
     );

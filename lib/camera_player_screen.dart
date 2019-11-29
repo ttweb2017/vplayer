@@ -83,7 +83,7 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
 
   @override
   Widget build(BuildContext context) {
-    //double height = MediaQuery.of(context).size.height;
+    double height = MediaQuery.of(context).size.height;
     return Container(
       //key: _scaffoldKey,
       child: Column(
@@ -108,7 +108,7 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
                 ),
               ),
               Positioned.fill(
-                top: 240.0,
+                top: height - 400.0,
                 child: Align(
                   alignment: Alignment.bottomCenter,
                   child:  _recordControlWidget(),
@@ -137,7 +137,7 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
         width: width,
         height: 100,
         decoration: BoxDecoration(
-            color: Color(0x50FFFFFF)
+            color: Color(0x40FFFFFF)
         ),
         padding: EdgeInsets.all(2.0),
         child: CupertinoButton(
@@ -163,7 +163,7 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
           border: Border.all(
               color: controller != null && controller.value.isRecordingVideo
                   ? Color(0xFF00BFFF)
-                  : Color(0xFFFF0000)
+                  : Color(0xFFFFFFFF)
           ),
           color: controller != null && controller.value.isRecordingVideo
               ? Color(0xFFFF0000)
@@ -171,8 +171,8 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
       ),
       child: Center(
         child: controller != null && controller.value.isRecordingVideo
-            ? Icon(CupertinoIcons.share)
-            : Icon(CupertinoIcons.video_camera),
+            ? Icon(CupertinoIcons.share, size: 30.0, color: Color(0xFF00BFFF))
+            : Icon(CupertinoIcons.video_camera, size: 30.0, color: Color(0xFFFFFFFF)),
       ),
     );
   }

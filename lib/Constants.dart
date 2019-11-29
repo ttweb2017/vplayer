@@ -1,5 +1,8 @@
 class Constants{
   static const String APP_TITLE = "Karaoke";
+  static const String APP_LOGO_ASSET_NAME = "karaoke_logo.jpg";
+  static const String APP_LOGO_ASSET_PACKAGE = "shrine_images";
+  static const String SPLASH_SCREEN_DOWNLOADING = "Please wait, downloading...";
   static const String KARAOKE_URL = "https://voicetm.com";
   static const String SINGERS_URL = KARAOKE_URL + "/api/singers";
   static const String VIDEO_URL = KARAOKE_URL + "/api/videos";

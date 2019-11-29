@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:karaoke/model/app_state_model.dart';
 import 'package:karaoke/model/singer.dart';
 import 'package:karaoke/song_row_item.dart';
+import 'package:karaoke/song_row_item_with_tap.dart';
 import 'package:karaoke/styles.dart';
 import 'package:provider/provider.dart';
 
@@ -43,7 +44,7 @@ class _SingerSongsScreenState extends State<SingerSongsScreen> {
             children: [
               Expanded(
                 child: ListView.builder(
-                  itemBuilder: (context, index) => SongRowItem(
+                  itemBuilder: (context, index) => SongRowTapItem(
                     index: index,
                     song: results[index],
                     lastItem: index == results.length - 1,
