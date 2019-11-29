@@ -206,6 +206,7 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
 
     try {
       await controller.initialize();
+      await controller.prepareForVideoRecording();//TODO check this later
     } on CameraException catch (e) {
       _showCameraException(e);
     }
