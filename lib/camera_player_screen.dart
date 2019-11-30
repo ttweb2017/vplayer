@@ -108,7 +108,7 @@ class _CameraScreenState extends State<CameraScreen> with WidgetsBindingObserver
                 ),
               ),
               Positioned.fill(
-                top: height - 440.0,
+                top: height - 460.0,
                 child: Align(
                   alignment: Alignment.bottomCenter,
                   child:  _recordControlWidget(),
