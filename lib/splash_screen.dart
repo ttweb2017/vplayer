@@ -29,19 +29,22 @@ class _SplashScreenState extends State<SplashScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Expanded(
-                flex: 2,
+                flex: 3,
                 child: Container(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(top: 20.0),
+                      ),
                       ClipRRect(
                         borderRadius: BorderRadius.circular(4),
                         child: Image.asset(
                           Constants.APP_LOGO_ASSET_NAME,
                           package: Constants.APP_LOGO_ASSET_PACKAGE,
                           fit: BoxFit.cover,
-                          width: 160.0,
-                          height: 160.0,
+                          width: 310.0,
+                          height: 310.0,
                         ),
                       ),
                       Padding(
@@ -64,7 +67,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     CupertinoActivityIndicator(
-                      radius: 20.0,
+                      radius: 15.0,
                     ),
                     Padding(
                       padding: EdgeInsets.only(top: 20.0),
