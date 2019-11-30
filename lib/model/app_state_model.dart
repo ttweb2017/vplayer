@@ -44,10 +44,23 @@ class AppStateModel extends foundation.ChangeNotifier {
     }
   }
 
+  // Checks if songs is empty
+  void checkSongs(){
+    if (_availableSongs == null) {
+      loadSongs();
+    }
+  }
+
+  // Checks if singers is empty
+  void checkSingers(){
+    if (_availableSongs == null) {
+      loadSingers();
+    }
+  }
+
   // Returns a copy of the list of available songs, filtered by category.
   List<Song> getSongs(){
     if (_availableSongs == null) {
-      loadSongs();
       return [];
     }
 

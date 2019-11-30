@@ -14,6 +14,7 @@ class SingerListTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<AppStateModel>(
       builder: (context, model, child) {
+        model.checkSingers();
         final singers = model.getSingers();
         return CustomScrollView(
           semanticChildCount: singers.length,

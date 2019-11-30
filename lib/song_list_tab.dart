@@ -18,6 +18,7 @@ class SongListTab extends StatelessWidget {
 
     return Consumer<AppStateModel>(
       builder: (context, model, child) {
+        model.checkSongs();
         final songs = isPopular ? model.getPopularSongs() : model.getSongs();
         final String title = isPopular ? Constants.NAVIGATION_POPULAR : Constants.NAVIGATION_SONG;
 
