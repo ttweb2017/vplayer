@@ -43,8 +43,8 @@ class _SplashScreenState extends State<SplashScreen> {
                           Constants.APP_LOGO_ASSET_NAME,
                           package: Constants.APP_LOGO_ASSET_PACKAGE,
                           fit: BoxFit.cover,
-                          width: 330.0,
-                          height: 330.0,
+                          width: 350.0,
+                          height: 350.0,
                         ),
                       ),
                       Padding(
