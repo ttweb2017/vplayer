@@ -66,14 +66,14 @@ class _SplashScreenState extends State<SplashScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    /*CupertinoActivityIndicator(
+                    CupertinoActivityIndicator(
                       radius: 15.0,
-                    ),*/
+                    ),
                     Padding(
-                      padding: EdgeInsets.only(top: 35.0),
+                      padding: EdgeInsets.only(top: 20.0),
                     ),
                     Text(
-                      "Enjoy our Karaoke",
+                      Constants.SPLASH_SCREEN_DOWNLOADING,
                       softWrap: true,
                       textAlign: TextAlign.center,
                       style: TextStyle(
