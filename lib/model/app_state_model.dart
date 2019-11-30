@@ -48,7 +48,7 @@ class AppStateModel extends foundation.ChangeNotifier {
   List<Song> getSongs(){
     if (_availableSongs == null) {
       loadSongs();
-      //return [];
+      return [];
     }
 
     if (_selectedSinger == null) {
