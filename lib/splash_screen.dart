@@ -29,13 +29,13 @@ class _SplashScreenState extends State<SplashScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Expanded(
-                flex: 3,
+                flex: 4,
                 child: Container(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Padding(
-                        padding: EdgeInsets.only(top: 20.0),
+                        padding: EdgeInsets.only(top: 10.0),
                       ),
                       ClipRRect(
                         borderRadius: BorderRadius.circular(4),
@@ -43,8 +43,8 @@ class _SplashScreenState extends State<SplashScreen> {
                           Constants.APP_LOGO_ASSET_NAME,
                           package: Constants.APP_LOGO_ASSET_PACKAGE,
                           fit: BoxFit.cover,
-                          width: 310.0,
-                          height: 310.0,
+                          width: 330.0,
+                          height: 330.0,
                         ),
                       ),
                       Padding(
