@@ -73,7 +73,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       padding: EdgeInsets.only(top: 35.0),
                     ),
                     Text(
-                      Constants.SPLASH_SCREEN_DOWNLOADING,
+                      "Enjoy our karaoke",
                       softWrap: true,
                       textAlign: TextAlign.center,
                       style: TextStyle(
