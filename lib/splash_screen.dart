@@ -18,12 +18,12 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
 
     return CupertinoPageScaffold(
-      backgroundColor: Color(0x805C6BC0),
+      backgroundColor: Color(0xFFFFFFFF),//0x805C6BC0
       child: Stack(
         fit: StackFit.expand,
         children: <Widget>[
           Container(
-            decoration: BoxDecoration(color: Color(0x805C6BC0)),
+            decoration: BoxDecoration(color: Color(0xFFFFFFFF)),//0x805C6BC0
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -40,8 +40,8 @@ class _SplashScreenState extends State<SplashScreen> {
                           Constants.APP_LOGO_ASSET_NAME,
                           package: Constants.APP_LOGO_ASSET_PACKAGE,
                           fit: BoxFit.cover,
-                          width: 110.0,
-                          height: 110.0,
+                          width: 160.0,
+                          height: 160.0,
                         ),
                       ),
                       Padding(
@@ -50,7 +50,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       Text(
                         Constants.APP_TITLE,
                         style: TextStyle(
-                            color: Color(0xFFFFFFFF),
+                            color: Color(0xFF000000),
                             fontWeight: FontWeight.bold,
                             fontSize: 24.0),
                       )
@@ -76,7 +76,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 18.0,
-                          color: Color(0xFFFFFFFF)),
+                          color: Color(0xFF000000)),
                     )
                   ],
                 ),
