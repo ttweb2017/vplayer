@@ -1,5 +1,6 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:karaoke/Constants.dart';
 import 'package:karaoke/song_row_item.dart';
 import 'package:karaoke/song_row_item_with_tap.dart';
 import 'package:provider/provider.dart';
@@ -18,7 +19,7 @@ class SongListTab extends StatelessWidget {
     return Consumer<AppStateModel>(
       builder: (context, model, child) {
         final songs = isPopular ? model.getPopularSongs() : model.getSongs();
-        final String title = isPopular ? 'Popular Songs' : 'Songs';
+        final String title = isPopular ? Constants.NAVIGATION_POPULAR : Constants.NAVIGATION_SONG;
 
         return CustomScrollView(
           semanticChildCount: songs.length,

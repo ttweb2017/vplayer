@@ -45,9 +45,10 @@ class AppStateModel extends foundation.ChangeNotifier {
   }
 
   // Returns a copy of the list of available songs, filtered by category.
-  List<Song> getSongs() {
+  List<Song> getSongs(){
     if (_availableSongs == null) {
-      return [];
+      loadSongs();
+      //return [];
     }
 
     if (_selectedSinger == null) {
