@@ -1,6 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:karaoke/Constants.dart';
 import 'package:provider/provider.dart';
 import 'camera_player_screen.dart';
 import 'model/app_state_model.dart';
@@ -46,10 +47,10 @@ class KaraokeApp extends StatelessWidget {
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
     return CupertinoApp(
-      title: 'Karaoke',
+      title: Constants.APP_TITLE,
       home: KaraokePage(
           cameras: cameras,
-          title: 'Karaoke Home Page'
+          title: Constants.MAIN_PAGE
       ),
     );
   }
@@ -76,19 +77,19 @@ class _KaraokePageState extends State<KaraokePage> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.mic),
-            title: Text('Populars'),
+            title: Text(Constants.NAVIGATION_POPULAR),
           ),
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.music_note),
-            title: Text('Songs'),
+            title: Text(Constants.NAVIGATION_SONG),
           ),
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.group),
-            title: Text('Singers'),
+            title: Text(Constants.NAVIGATION_SINGER),
           ),
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.search),
-            title: Text('Search'),
+            title: Text(Constants.NAVIGATION_SEARCH),
           ),
         ],
       ),
