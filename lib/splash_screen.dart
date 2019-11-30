@@ -29,7 +29,7 @@ class _SplashScreenState extends State<SplashScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Expanded(
-                flex: 4,
+                flex: 3,
                 child: Container(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -43,8 +43,8 @@ class _SplashScreenState extends State<SplashScreen> {
                           Constants.APP_LOGO_ASSET_NAME,
                           package: Constants.APP_LOGO_ASSET_PACKAGE,
                           fit: BoxFit.cover,
-                          width: 350.0,
-                          height: 350.0,
+                          width: 300.0,
+                          height: 300.0,
                         ),
                       ),
                       Padding(
@@ -66,14 +66,14 @@ class _SplashScreenState extends State<SplashScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    CupertinoActivityIndicator(
+                    /*CupertinoActivityIndicator(
                       radius: 15.0,
-                    ),
+                    ),*/
                     Padding(
-                      padding: EdgeInsets.only(top: 20.0),
+                      padding: EdgeInsets.only(top: 35.0),
                     ),
                     Text(
-                      Constants.SPLASH_SCREEN_DOWNLOADING,
+                      "Enjoy our Karaoke",
                       softWrap: true,
                       textAlign: TextAlign.center,
                       style: TextStyle(

@@ -58,8 +58,9 @@ flutter_icons:
 # The following section is specific to Flutter.
 flutter:
   assets:
-    - packages/shrine_images/karaoke_logo.jpg
+    - packages/shrine_images/karaoke_icon.png
     - packages/shrine_images/karaoke_logo.png
+    - packages/shrine_images/karaoke_splash_screen.png
     - packages/shrine_images/karaoke_logo_transparent.png
 
   # The following line ensures that the Material Icons font is
