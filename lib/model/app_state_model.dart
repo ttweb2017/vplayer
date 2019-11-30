@@ -53,7 +53,7 @@ class AppStateModel extends foundation.ChangeNotifier {
 
   // Checks if singers is empty
   void checkSingers(){
-    if (_availableSongs == null) {
+    if (_availableSingers == null) {
       loadSingers();
     }
   }
